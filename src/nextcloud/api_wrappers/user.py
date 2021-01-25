@@ -6,15 +6,16 @@ class User(WithRequester):
     API_URL = "/ocs/v1.php/cloud/users"
     SUCCESS_CODE = 100
 
-    def add_user(self, uid, passwd):
+    def add_user(self, uid, passwd="", email=""):
         """
         Create a new user on the Nextcloud server
 
         :param uid: str, uid of new user
-        :param passwd: str, password of new user
+        :param passwd: str, password of new user, leave empty to send welcome mail
+        :param email: str, email of new user, required if password empty
         :return:
         """
-        msg = {'userid': uid, 'password': passwd}
+        msg = {'userid': uid, 'password': passwd, 'email': email}
         return self.requester.post("", msg)
 
     def get_users(self, search=None, limit=None, offset=None):
@@ -60,7 +61,7 @@ class User(WithRequester):
         )
         assert what in what_to_key_map, (
             "You have chosen to edit user's '{what}', but you can choose only from: {choices}"
-            .format(what=what, choices=", ".join(what_to_key_map.keys()))
+                .format(what=what, choices=", ".join(what_to_key_map.keys()))
         )
 
         url = "{uid}".format(uid=uid)
